@@ -65,7 +65,7 @@ export class StoryListComponent implements OnInit {
   }
 
   nextPage() {
-     alert(" page no: "+this.page+ " page size: "+ this.pageSize);
+     //alert(" page no: "+this.page+ " page size: "+ this.pageSize);
     this.page++;
     this.loadStories();
   }
