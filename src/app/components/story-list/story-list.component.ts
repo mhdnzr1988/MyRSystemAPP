@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import{RSystemServiceService} from '../../services/rsystem-service.service';
+import{StoryService} from '../../services/storyservice.service';
 import { Story } from "../../models/story";
-import { CommonModule } from '@angular/common'; // ✅ Import this
+import { CommonModule } from '@angular/common'; 
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -21,24 +21,48 @@ import { MatTableDataSource } from '@angular/material/table';
     MatSortModule,
     MatFormFieldModule,
     MatInputModule],
-  providers:[RSystemServiceService],
+  providers:[StoryService],
 })
 export class StoryListComponent implements OnInit {
   stories: Story[] = [];
   stories1: any;
   query = '';
   page = 1;
-  pageSize = 20;
+  pageSize = 200;
+  pageInput: number | null = null;
+  totalPages: number = 0;
   displayedColumns: string[] = ['index', 'title', 'url'];
   dataSource = new MatTableDataSource(this.stories);
 
-  constructor(private hnService: RSystemServiceService) {}
+  constructor(private hnService: StoryService) {}
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    // Calculate total pages when data or page size changes
+    this.dataSource.paginator?.page.subscribe(() => {
+      this.updateTotalPages();
+    });
+    this.updateTotalPages();
+  }
+  // Calculate total pages
+  updateTotalPages() {
+    this.totalPages = Math.ceil(this.dataSource.data.length / (this.paginator?.pageSize || 10));
+  }
+  // Navigate to a specific page
+  goToPage() {
+    if (this.pageInput && this.paginator) {
+      const page = Math.max(1, Math.min(this.pageInput, this.totalPages)) - 1; // Convert to 0-based index
+      this.paginator.pageIndex = page;
+      this.paginator.page.next({
+        pageIndex: page,
+        pageSize: this.paginator.pageSize,
+        length: this.paginator.length
+      });
+      this.pageInput = null; // Clear input
+    }
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -49,13 +73,10 @@ export class StoryListComponent implements OnInit {
     this.loadStories();
   }
   loadStories() {
-    console.log("Before fetch: this.stories = ", this.stories);
-    //alert(" page no: "+this.page+ " page size: "+ this.pageSize);
     this.hnService.getStories(this.page, this.pageSize, this.query)
       .subscribe(stories => {
         this.stories = stories;
         this.dataSource = new MatTableDataSource(this.stories);
-        console.log("After fetch: this.dataSource = ", this.dataSource);
       });
   }
 
@@ -65,7 +86,6 @@ export class StoryListComponent implements OnInit {
   }
 
   nextPage() {
-     //alert(" page no: "+this.page+ " page size: "+ this.pageSize);
     this.page++;
     this.loadStories();
   }

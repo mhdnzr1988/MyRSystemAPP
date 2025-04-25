@@ -18,3 +18,21 @@ table {
     padding: 0.5em 1.5em;
     border-radius: 6px;
   }
+  .go-to-page {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .go-to-page input {
+    width: 100px;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .mat-elevation-z8 {
+    width: 100%;
+    margin-bottom: 16px;
+  }
