@@ -13,8 +13,7 @@ export class StoryService {
 
   constructor(private http: HttpClient) {}
 
-  getStories(page = 1, pageSize = 20, query = ''): Observable<Story[]> {
-    
+  getStories(page:number , pageSize : number, query = ''): Observable<Story[]> {    
     const params = { page, pageSize, query };
     return this.http.get<Story[]>(this.baseUrl, { params });
   }

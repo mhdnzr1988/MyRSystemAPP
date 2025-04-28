@@ -1,7 +1,18 @@
-import { Environment } from './environment';
+import { environment } from './environment';
 
 describe('Environment', () => {
-  it('should create an instance', () => {
-    expect(new Environment()).toBeTruthy();
+
+  it('should have production set to false', () => {
+    expect(environment.production).toBeFalse();
   });
+
+  it('should have the correct API base URL', () => {
+    expect(environment.apiBaseUrl).toBe('http://localhost:7184/api/Stories');
+  });
+
+  it('should have endpoints defined', () => {
+    expect(environment.endpoints).toBeDefined();
+    expect(environment.endpoints.users).toBe('/stories');
+  });
+
 });
