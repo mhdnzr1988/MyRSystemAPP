@@ -17,4 +17,5 @@ export class StoryService {
     const params = { page, pageSize, query };
     return this.http.get<Story[]>(this.baseUrl, { params });
   }
+  
 }

@@ -64,6 +64,7 @@ export class StoryListComponent implements OnInit {
       this.pageInput = null; // Clear input
     }
   }
+  //filter data from list
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
