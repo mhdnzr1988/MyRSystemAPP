@@ -48,3 +48,9 @@ table {
     justify-content: center;
     align-items: center;
   }
+  .spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 500px;
+  }

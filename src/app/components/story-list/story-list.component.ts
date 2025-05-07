@@ -8,7 +8,8 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource } from '@angular/material/table'; 
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 // components/story-list/story-list.component.ts
@@ -19,13 +20,14 @@ import { MatTableDataSource } from '@angular/material/table';
   imports: [CommonModule, FormsModule,MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    MatFormFieldModule,
+    MatFormFieldModule,MatProgressSpinnerModule,
     MatInputModule],
   providers:[StoryService],
 })
 export class StoryListComponent implements OnInit {
   stories: Story[] = [];
   stories1: any;
+  isLoading: boolean=true;
   query = '';
   page = 1;
   pageSize = 200;
@@ -70,15 +72,23 @@ export class StoryListComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  ngOnInit() {
+  ngOnInit() {   
     this.loadStories();
   }
   loadStories() {
-    this.hnService.getStories(this.page, this.pageSize, this.query)
-      .subscribe(stories => {
+  this.hnService.getStories(this.page,this.query)
+    .subscribe({
+      next: stories => {
         this.stories = stories;
         this.dataSource = new MatTableDataSource(this.stories);
-      });
+      },
+      error: error => {
+        console.error('Failed to load stories', error);
+      },
+      complete: () => {
+        this.isLoading = false; // ✅ Stop spinner AFTER data is loaded
+      }
+    });
   }
 
   search() {

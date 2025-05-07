@@ -1,1 +1,11 @@
-<app-story-list></app-story-list>
+<nav>
+    <ul>
+      <li (click)="selectedMenu = 'story'">Show Stories</li>
+      <li (click)="selectedMenu = 'home'">Home</li>
+      <!-- Add more menu items here -->
+    </ul>
+  </nav>
+  <div>
+<app-story-list *ngIf="selectedMenu === 'story'"></app-story-list>
+<p *ngIf="selectedMenu === 'home'">Welcome to the homepage!</p>
+</div>
